@@ -1,6 +1,7 @@
 'use strict';
 
 const mongoose = require('mongoose');
+const errorMessages = require('../services/errorMessages');
 const models = require('./db').getModels();
 
 async function getServices() {
@@ -26,6 +27,7 @@ async function placeOrder(body) {
       address, country, state, zip
     } = body;
     const pricing = await models.Pricing.findOne({ _id: mongoose.Types.ObjectId(pricingId) });
+    if (!pricing) return { status: 'error', error: errorMessages.PRICING_WITH_THIS_ID_NOT_FOUND };
     return (await models.Purchases.create(
       {
         serviceId: pricing.service,

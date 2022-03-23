@@ -2,7 +2,11 @@
 
 'use strict';
 
-module.exports = async (models) => {
+require('dotenv').config();
+const db = require('./db/db');
+const models = db.getModels();
+
+const dbMigration = async () => {
   if ((await models.Service.find({})).length >= 3 && (await models.Pricing.find({})).length >= 9) return;
   await models.Service.create(
     [
@@ -90,4 +94,15 @@ module.exports = async (models) => {
   );
   service.pricing.push(pricing[0]._id, pricing[1]._id, pricing[2]._id);
   service.save();
+  return;
 };
+
+const start = async () => {
+  try {
+    await db.connectToDb();
+    await dbMigration();
+  } catch (error) {
+    console.log(error);
+  }
+};
+start();

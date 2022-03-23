@@ -11,6 +11,7 @@ module.exports = (body) => {
     pricingId, firstName, lastName, email,
     address, country, state, zip
   } = body;
+  if (pricingId.length !== 12 && pricingId.length !== 24) return { status: statuses.error, error: errorMessages._ID_ERROR };
   if (
     !pricingId ||
     !firstName ||

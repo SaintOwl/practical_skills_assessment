@@ -36,7 +36,9 @@ async function placeOrder(req, res) {
   try {
     const validatorResponse = validateCheckoutBody(req.body);
     if (validatorResponse.status === 'error') return res.status(400).json(validatorResponse.error);
-    return res.status(200).json(await placeOrderToDB(req.body));
+    const order = await placeOrderToDB(req.body);
+    if (order?.status === 'error') return res.status(404).json(order.error);
+    return res.status(200).json(order);
   } catch (err) {
     return (err instanceof AppError) ? res.status(err.status).json(err)
       : res.status(err.status || 500).json(new AppError({ err: err }));
