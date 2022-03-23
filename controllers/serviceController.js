@@ -1,11 +1,14 @@
 'use strict';
 
 const AppError = require('../services/AppError');
+const checkSlug = require('../validation/checkSlug');
+const validateCheckoutBody = require('../validation/validateCheckoutBody');
 const {
   getServices: getServicesFromDB,
   getPricing: getPricingFromDB,
   placeOrder: placeOrderToDB
 } = require('../db/dbWork');
+const errorMessages = require('../services/errorMessages');
 
 async function getServices(req, res) {
   try {
@@ -18,7 +21,11 @@ async function getServices(req, res) {
 
 async function getPricing(req, res) {
   try {
-    return res.status(200).json(await getPricingFromDB(req.params.slug));
+    const slug = req.params.slug;
+    if (!checkSlug(slug)) return res.status(400).json(errorMessages.SLUG_NOT_DEFINED);
+    const pricing = await getPricingFromDB(slug);
+    if (!pricing) return res.status(404).json(errorMessages.CAN_NOT_FIND_PRICES_FOR_THIS_SLUG);
+    return res.status(200).json(pricing);
   } catch (err) {
     return (err instanceof AppError) ? res.status(err.status).json(err)
       : res.status(err.status || 500).json(new AppError({ err: err }));
@@ -27,6 +34,8 @@ async function getPricing(req, res) {
 
 async function placeOrder(req, res) {
   try {
+    const validatorResponse = validateCheckoutBody(req.body);
+    if (validatorResponse.status === 'error') return res.status(400).json(validatorResponse.error);
     return res.status(200).json(await placeOrderToDB(req.body));
   } catch (err) {
     return (err instanceof AppError) ? res.status(err.status).json(err)

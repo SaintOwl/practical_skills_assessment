@@ -4,7 +4,8 @@
 
 const mongoose = require('mongoose');
 const files = require('../models/index.js');
-const dbFilling = require('./dbFilling');
+// TODO: remove dbMigration
+const dbMigration = require('./dbMigration');
 
 let models = {};
 
@@ -18,7 +19,7 @@ function db() {}
 db.connectToDb = async () => {
   try {
     await mongoose.connect(process.env.DB_CONNECTION_LINK);
-    await dbFilling(models);
+    await dbMigration(models);
   } catch (err) {
     console.log(err);
   }

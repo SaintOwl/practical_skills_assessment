@@ -22,17 +22,14 @@ async function getPricing(slug) {
 async function placeOrder(body) {
   try {
     const { 
-      type, firstName, lastName, email,
+      pricingId, firstName, lastName, email,
       address, country, state, zip
     } = body;
-    console.log(body);
-    const pricing = await models.Pricing.findOne({ _id: mongoose.Types.ObjectId(type) });
-    console.log(pricing);
-    console.log('pricing');
+    const pricing = await models.Pricing.findOne({ _id: mongoose.Types.ObjectId(pricingId) });
     return (await models.Purchases.create(
       {
-        service: pricing.service,
-        type: pricing._id,
+        serviceId: pricing.service,
+        pricingId: pricing._id,
         firstName,
         lastName,
         email,
