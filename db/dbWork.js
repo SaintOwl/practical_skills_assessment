@@ -26,12 +26,12 @@ async function placeOrder(body) {
       address, country, state, zip
     } = body;
     console.log(body);
-    const pricing = await models.Pricing.findOne({ _id: mongoose.Types.ObjectId(type) }).populate('service');
+    const pricing = await models.Pricing.findOne({ _id: mongoose.Types.ObjectId(type) });
     console.log(pricing);
     console.log('pricing');
     return (await models.Purchases.create(
       {
-        service: pricing.service._id,
+        service: pricing.service,
         type: pricing._id,
         firstName,
         lastName,
