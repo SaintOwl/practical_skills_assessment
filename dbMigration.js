@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable no-undef */
 
 'use strict';
@@ -5,14 +6,15 @@
 require('dotenv').config();
 const db = require('./db/db');
 const models = db.getModels();
+const LOREM = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
 
 const dbMigration = async () => {
   if ((await models.Service.find({})).length >= 3 && (await models.Pricing.find({})).length >= 9) return;
   await models.Service.create(
     [
-      { name: 'First Service',  slug: 'first_service',  description: process.env.LOREM },
-      { name: 'Second Service', slug: 'second_service', description: process.env.LOREM },
-      { name: 'Third Service',  slug: 'third_service',  description: process.env.LOREM },
+      { name: 'First Service',  slug: 'first_service',  description: LOREM },
+      { name: 'Second Service', slug: 'second_service', description: LOREM },
+      { name: 'Third Service',  slug: 'third_service',  description: LOREM },
     ]
   );
 

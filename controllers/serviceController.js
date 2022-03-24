@@ -38,6 +38,7 @@ async function placeOrder(req, res) {
     if (validatorResponse.status === 'error') return res.status(400).json(validatorResponse.error);
     const order = await placeOrderToDB(req.body);
     if (order?.status === 'error') return res.status(404).json(order.error);
+    console.log(order);
     return res.status(200).json(order);
   } catch (err) {
     return (err instanceof AppError) ? res.status(err.status).json(err)
